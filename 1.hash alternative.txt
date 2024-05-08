@@ -1,0 +1,89 @@
+import array as hashTable
+
+class LinearProbingHashTable:
+    def __init__(self, size):
+        self.size = size
+        self.hashTable = hashTable.array('i', [-1] * size)
+
+    def insert(self, value):
+        key = value % self.size
+        original_key = key
+
+        if self.hashTable[key] == -1:
+            self.hashTable[key] = value
+            print(f"{value} inserted at index {key}")
+        else:
+            print(f"Collision at index {key}. Trying linear probing...")
+            while self.hashTable[key] != -1:
+                key = (key + 1) % self.size
+                if key == original_key:
+                    print(f"Unable to insert {value}, hash table is full.")
+                    return
+            self.hashTable[key] = value
+            print(f"{value} inserted at index {key}")
+
+    def search(self, value):
+        key = value % self.size
+        start_key = key
+        while self.hashTable[key] != -1:
+            if self.hashTable[key] == value:
+                print(f"{value} found at index {key}")
+                return True
+            key = (key + 1) % self.size
+            if key == start_key:
+                break
+        print(f"{value} not found")
+        return False
+
+    def delete(self, value):
+        key = value % self.size
+        start_key = key
+        while self.hashTable[key] != -1:
+            if self.hashTable[key] == value:
+                self.hashTable[key] = -1
+                print(f"{value} deleted from index {key}")
+                return True
+            key = (key + 1) % self.size
+            if key == start_key:
+                break
+        print(f"{value} not found, could not delete")
+        return False
+
+    def display(self):
+        for i in range(self.size):
+            print(f"Index[{i}]: {self.hashTable[i]}")
+
+def main():
+    size = int(input("Enter the size of the hash table: "))
+    hash_table = LinearProbingHashTable(size)
+
+    while True:
+        print("\nMENU:")
+        print("1. Insert")
+        print("2. Search")
+        print("3. Delete")
+        print("4. Display")
+        print("5. Exit")
+
+        choice = input("Enter your choice: ")
+
+        if choice == '1':
+            value = int(input("Enter value to insert: "))
+            hash_table.insert(value)
+        elif choice == '2':
+            value = int(input("Enter value to search: "))
+            hash_table.search(value)
+        elif choice == '3':
+            value = int(input("Enter value to delete: "))
+            hash_table.delete(value)
+        elif choice == '4':
+            print("\nCurrent hash table:")
+            hash_table.display()
+        elif choice == '5':
+            print("Exiting...")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
